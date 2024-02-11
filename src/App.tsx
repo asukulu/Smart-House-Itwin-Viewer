@@ -5,7 +5,7 @@
 
 import "./App.scss";
 
-import type { ScreenViewport } from "@itwin/core-frontend";
+import type { IModelConnection, ScreenViewport } from "@itwin/core-frontend";
 import { FitViewTool, IModelApp, StandardViewId } from "@itwin/core-frontend";
 import { FillCentered } from "@itwin/core-react";
 import { ProgressLinear } from "@itwin/itwinui-react";
@@ -13,7 +13,9 @@ import {
   MeasurementActionToolbar,
   MeasureTools,
   MeasureToolsUiItemsProvider,
+  
 } from "@itwin/measure-tools-react";
+
 import {
   AncestorsNavigationControls,
   CopyPropertyTextContextMenuItem,
@@ -37,6 +39,7 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import { Auth } from "./Auth";
 import { history } from "./history";
+import { QueryRowFormat } from "@itwin/core-common";
 
 const App: React.FC = () => {
   const [iModelId, setIModelId] = useState(process.env.IMJS_IMODEL_ID);
@@ -136,6 +139,47 @@ const App: React.FC = () => {
     MeasurementActionToolbar.setDefaultActionProvider();
   }, []);
 
+  //New codes added
+  const onIModelConnected = (_imodel: IModelConnection) => {
+    console.log("Hello World")
+
+    IModelApp.viewManager.onViewOpen.addOnce(async (vp: ScreenViewport) => {
+
+    
+
+      const categoriesToHide : string[] = [
+        "'Wall 2nd'",
+        "'Wall 1st'",
+        "'Dry Wall 2nd'",
+        "'Dry Wall 1st'",
+        "'Brick Exterior'",
+        "'WINDOWS 1ST'",
+        "'WINDOWS 2ND'",
+        "'Ceiling 1st'",
+        "'Ceiling 2nd'",
+        "'Callouts'",
+        "'light fixture'",
+        "'Roof'",
+      ]
+  
+      const query = `SELECT ECInstanceId FROM Bis.Category 
+          WHERE CodeValue IN (${categoriesToHide.toString()})`;
+  
+      const result = _imodel.query(query, undefined, {rowFormat: QueryRowFormat.UseJsPropertyNames});
+      const categoryIds = [];
+   
+      for await (const row of result)
+        
+         categoryIds.push(row.id);
+
+         console.log(categoryIds)
+         
+         vp.changeCategoryDisplay(categoryIds,false);
+
+    });
+  
+//End of the new
+  }
   return (
     <div className="viewer-container">
       {!accessToken && (
@@ -153,6 +197,9 @@ const App: React.FC = () => {
         viewCreatorOptions={viewCreatorOptions}
         enablePerformanceMonitors={true} // see description in the README (https://www.npmjs.com/package/@itwin/web-viewer-react)
         onIModelAppInit={onIModelAppInit}
+
+        onIModelConnected={onIModelConnected}
+
         uiProviders={[
           new ViewerNavigationToolsProvider(),
           new ViewerContentToolsProvider({
