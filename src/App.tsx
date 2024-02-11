@@ -41,6 +41,7 @@ import { Auth } from "./Auth";
 import { history } from "./history";
 import { DisplayStyleSettingsProps, QueryRowFormat } from "@itwin/core-common";
 import { Visualization } from "./Visualization";
+import { SmartDeviceAPI } from "./SmartDeviceAPI";
 
 const App: React.FC = () => {
   const [iModelId, setIModelId] = useState(process.env.IMJS_IMODEL_ID);
@@ -155,7 +156,7 @@ const App: React.FC = () => {
         }
       }
       vp.overrideDisplayStyle(viewStyle);
-
+console.log(await SmartDeviceAPI.getData());
       Visualization.hideHouseExterior(vp);
     });
   }
