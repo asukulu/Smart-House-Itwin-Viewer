@@ -9,6 +9,7 @@ import type { IModelConnection, ScreenViewport } from "@itwin/core-frontend";
 import { FitViewTool, IModelApp, StandardViewId } from "@itwin/core-frontend";
 import { FillCentered } from "@itwin/core-react";
 import { ProgressLinear } from "@itwin/itwinui-react";
+
 import {
   MeasurementActionToolbar,
   MeasureTools,
@@ -42,6 +43,7 @@ import { history } from "./history";
 import { DisplayStyleSettingsProps, QueryRowFormat } from "@itwin/core-common";
 import { Visualization } from "./Visualization";
 import { SmartDeviceAPI } from "./SmartDeviceAPI";
+import { SmartDeviceDecorator } from "./components/decorators/SmartDeviceDecorator";
 
 const App: React.FC = () => {
   const [iModelId, setIModelId] = useState(process.env.IMJS_IMODEL_ID);
@@ -158,6 +160,7 @@ const App: React.FC = () => {
       vp.overrideDisplayStyle(viewStyle);
 console.log(await SmartDeviceAPI.getData());
       Visualization.hideHouseExterior(vp);
+      IModelApp.viewManager.addDecorator(new SmartDeviceDecorator(vp));
     });
   }
 //End of the new
