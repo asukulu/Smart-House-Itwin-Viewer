@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Getting Started with the iTwin Viewer Create React App Template
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
@@ -92,3 +93,6 @@ If you are not using NPM, remove the `USING_NPM` env var from [.env](./.env)
 - [Using the iTwin Platform](https://developer.bentley.com/)
 
 - [iTwin Developer Program](https://www.youtube.com/playlist?list=PL6YCKeNfXXd_dXq4u9vtSFfsP3OTVcL8N)
+=======
+# Smart-House-Itwin-Viewer
+>>>>>>> 9f781060bbda2f60b6b1e327e2c221451d1c82a6
