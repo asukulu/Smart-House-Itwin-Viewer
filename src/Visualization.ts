@@ -1,10 +1,6 @@
-/*---------------------------------------------------------------------------------------------
- * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
- * See LICENSE.md in the project root for license terms and full copyright notice.
- *--------------------------------------------------------------------------------------------*/
-import type { IModelConnection, ScreenViewport } from "@itwin/core-frontend";
+import { QueryRowFormat } from "@itwin/core-common";
 
-//import { IModelConnection, ScreenViewport } from "@bentley/imodeljs-frontend";
+import { IModelConnection, ScreenViewport } from "@itwin/core-frontend";
 
 export class Visualization {
 
@@ -34,7 +30,7 @@ export class Visualization {
     const query = `SELECT ECInstanceId FROM Bis.Category 
         WHERE CodeValue IN (${categoriesToHide.toString()})`;
 
-    const result = iModel.query(query);
+    const result = iModel.query(query, undefined,{rowFormat:QueryRowFormat.UseJsPropertyNames});
     const categoryIds = [];
 
     for await (const row of result)

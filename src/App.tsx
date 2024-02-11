@@ -39,7 +39,8 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import { Auth } from "./Auth";
 import { history } from "./history";
-import { QueryRowFormat } from "@itwin/core-common";
+import { DisplayStyleSettingsProps, QueryRowFormat } from "@itwin/core-common";
+import { Visualization } from "./Visualization";
 
 const App: React.FC = () => {
   const [iModelId, setIModelId] = useState(process.env.IMJS_IMODEL_ID);
@@ -147,39 +148,19 @@ const App: React.FC = () => {
 
     
 
-      const categoriesToHide : string[] = [
-        "'Wall 2nd'",
-        "'Wall 1st'",
-        "'Dry Wall 2nd'",
-        "'Dry Wall 1st'",
-        "'Brick Exterior'",
-        "'WINDOWS 1ST'",
-        "'WINDOWS 2ND'",
-        "'Ceiling 1st'",
-        "'Ceiling 2nd'",
-        "'Callouts'",
-        "'light fixture'",
-        "'Roof'",
-      ]
-  
-      const query = `SELECT ECInstanceId FROM Bis.Category 
-          WHERE CodeValue IN (${categoriesToHide.toString()})`;
-  
-      const result = _imodel.query(query, undefined, {rowFormat: QueryRowFormat.UseJsPropertyNames});
-      const categoryIds = [];
-   
-      for await (const row of result)
-        
-         categoryIds.push(row.id);
+      const viewStyle: DisplayStyleSettingsProps = {
+        viewflags: {
+          visEdges: false,
+          shadows: true
+        }
+      }
+      vp.overrideDisplayStyle(viewStyle);
 
-         console.log(categoryIds)
-         
-         vp.changeCategoryDisplay(categoryIds,false);
-
+      Visualization.hideHouseExterior(vp);
     });
-  
-//End of the new
   }
+//End of the new
+  
   return (
     <div className="viewer-container">
       {!accessToken && (
